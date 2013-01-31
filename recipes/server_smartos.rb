@@ -31,8 +31,8 @@ service "postgresql" do
   action [:enable, :start]
 end
 
-db_master   = search("node", "role:#{node[:postgresql][:database_master_role]} AND chef_environment:#{node.chef_environment}").first
-db_standbys = search("node", "role:#{node[:postgresql][:database_standby_role]} AND chef_environment:#{node.chef_environment}") || []
+db_master   = search("node", "role:#{node[:postgresql][:database_master_role]} AND chef_environment:#{node.chef_environment} AND roles:#{node['application']['app_name']}").first
+db_standbys = search("node", "role:#{node[:postgresql][:database_standby_role]} AND chef_environment:#{node.chef_environment} AND roles:#{node['application']['app_name']}") || []
 
 # If we have a standby (streaming replication)
 if db_standbys.size > 0
@@ -122,6 +122,7 @@ if db_standbys.size > 0
     end
   end
 else
+  Chef::Log.info("DB_MASTER FOUND = #{db_master} IPADDRESS = #{db_master['ipaddress']}")
   # write out normal settings non-replication
   template "#{node[:postgresql][:dir]}/postgresql.conf" do
     source "smartos.postgresql.conf.erb"
