@@ -122,7 +122,6 @@ if db_standbys.size > 0
     end
   end
 else
-  Chef::Log.info("DB_MASTER FOUND = #{db_master} IPADDRESS = #{db_master['ipaddress']}")
   # write out normal settings non-replication
   template "#{node[:postgresql][:dir]}/postgresql.conf" do
     source "smartos.postgresql.conf.erb"
