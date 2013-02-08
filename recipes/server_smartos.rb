@@ -55,7 +55,7 @@ if db_standbys.size > 0
   end
 
   # set string of ips for standbys for pg_hba file
-  node['postgresql']['standby_ips'] = db_standbys.map { |standby| standby['ipaddress'] }.join('/32, ')
+  node.default['postgresql']['standby_ips'] = db_standbys.map { |standby| standby['ipaddress'] }.join('/32, ')
 
   if node.role?(node[:postgresql][:database_master_role])
     Chef::Log.info "Current node is a master"
@@ -113,10 +113,10 @@ if db_standbys.size > 0
         only_if { db_master['postgresql']['password']['replication_user'] }
       end
 
-      node['postgresql']['password']['postgres'] = db_master['postgresql']['password']['postgres']
+      node.default['postgresql']['password']['postgres'] = db_master['postgresql']['password']['postgres']
 
       ruby_block "confirm replication" do
-        node['postgresql']['replicated'] = true
+        node.default['postgresql']['replicated'] = true
         only_if "tail -n 1 /var/log/postgresql91.log | grep 'ready to accept read only connections'"
       end
     end
