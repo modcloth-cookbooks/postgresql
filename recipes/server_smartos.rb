@@ -26,9 +26,25 @@ node.default[:postgresql][:listen_addresses] = node.ipaddress
 # package "postgresql91-adminpack"
 package "postgresql91-server"
 
-service "postgresql" do
+directory node[:postgresql][:dir] do
+  action :create
+  owner "postgres"
+  group "postgres"
+  mode 0700
+  recursive true
+  not_if { File.exist? node[:postgresql][:dir] }
+end
+
+bash 'initialize postgres db' do
+  code <<-EOH
+    sudo -u postgres initdb -E 'UTF-8' --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8 -D #{node[:postgresql][:dir]}
+  EOH
+  not_if { Dir.entries(node[:postgresql][:dir]).size > 2 }
+end
+
+service 'postgresql' do
   supports :restart => true, :status => true, :reload => true
-  action [:enable, :start]
+  action [:enable, :start, :restart]
 end
 
 db_master   = search("node", "role:#{node[:postgresql][:database_master_role]} AND chef_environment:#{node.chef_environment} AND roles:#{node['application']['app_name']}").first
@@ -106,8 +122,8 @@ if db_standbys.size > 0
             rm -rf /var/pgsql/pgbasebackup/*
             svcadm disable postgresql
             PGPASSWORD=#{db_master['postgresql']['password']['replication_user']} pg_basebackup -v -U replication_user -h #{db_master['ipaddress'].to_s} -D /var/pgsql/pgbasebackup
-            cp -r /var/pgsql/pgbasebackup/* /var/pgsql/data91/
-            chown -R postgres:postgres /var/pgsql/data91/
+            cp -r /var/pgsql/pgbasebackup/* /var/pgsql/data/
+            chown -R postgres:postgres /var/pgsql/data/
             svcadm enable postgresql
         EOH
         only_if { db_master['postgresql']['password']['replication_user'] }
@@ -117,7 +133,7 @@ if db_standbys.size > 0
 
       ruby_block "confirm replication" do
         node.default['postgresql']['replicated'] = true
-        only_if "tail -n 1 /var/log/postgresql91.log | grep 'ready to accept read only connections'"
+        only_if "tail -n 1 /var/log/postgresql.log | grep 'ready to accept read only connections'"
       end
     end
   end
