@@ -65,10 +65,9 @@ when "smartos"
     retries 3
     retry_delay 10
     code <<-EOH
-    export PGPASSWORD='postgres' 
-    echo "ALTER ROLE postgres ENCRYPTED PASSWORD '#{node[:postgresql][:password][:postgres]}';" | psql -U postgres
+      echo "ALTER ROLE postgres ENCRYPTED PASSWORD '#{node[:postgresql][:password][:postgres]}';" | psql
     EOH
-    not_if "PGPASSWORD='postgres' echo '\\connect' | PGPASSWORD=#{node['postgresql']['password']['postgres']} psql --username=postgres -h localhost"
+    #not_if "echo '\\connect' | PGPASSWORD=#{node['postgresql']['password']['postgres']} psql --username=postgres -h localhost"
     action :run
   end
 else
