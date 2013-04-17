@@ -51,7 +51,7 @@ template "#{node[:postgresql][:dir]}/pg_hba.conf" do
   group "postgres"
   mode 0600
   variables(:standby_ips => node['postgresql']['standby_ips'])
-  notifies :reload, resources(:service => "postgresql")
+  notifies :reload, 'service[postgresql]', :immediately
 end
 
 case node['platform']

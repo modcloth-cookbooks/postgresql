@@ -7,7 +7,7 @@
 local      all        postgres                                  ident
 
 local      all           all                                     peer
-host       all           all             127.0.0.1/32            md5
+host       all           all  <%= node[:postgresql][:allow_ipv4_clients_ip_range] %>            md5
 host       all           all             ::1/128                 md5
 <% if @standby_ips %>
 host    replication replication_user  <%= @standby_ips %>/32      md5
