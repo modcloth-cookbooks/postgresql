@@ -24,22 +24,6 @@ node.default[:postgresql][:listen_addresses] = node.ipaddress
 
 package "postgresql91-server"
 
-directory node[:postgresql][:dir] do
-  action :create
-  owner "postgres"
-  group "postgres"
-  mode 0700
-  recursive true
-  not_if { File.exist? node[:postgresql][:dir] }
-end
-
-bash 'initialize postgres db' do
-  code <<-EOH
-    sudo -u postgres initdb -E 'UTF-8' --lc-collate=en_US.UTF-8 --lc-ctype=en_US.UTF-8 -D #{node[:postgresql][:dir]}
-  EOH
-  not_if { Dir.entries(node[:postgresql][:dir]).size > 2 }
-end
-
 service 'postgresql' do
   supports :restart => true, :status => true, :reload => true
   action [:enable, :start]
@@ -64,6 +48,6 @@ else
       :hot_standby => true,
       :listen_addresses => '*'
     )
-    notifies :restart, 'service[postgresql]', :immediately
+#    notifies :restart, 'service[postgresql]', :immediately
   end
 end
