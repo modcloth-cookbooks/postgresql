@@ -22,7 +22,7 @@
 node.default[:postgresql][:ssl] = "true"
 node.default[:postgresql][:listen_addresses] = node.ipaddress
 
-package "postgresql91-server"
+package "postgresql#{node[:postgresql][:version]}-server"
 
 service 'postgresql' do
   supports :restart => true, :status => true, :reload => true

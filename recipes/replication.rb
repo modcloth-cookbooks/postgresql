@@ -69,8 +69,8 @@ if node.role?(node[:postgresql][:database_standby_role])
             rm -rf /var/pgsql/pgbasebackup/*
             svcadm disable postgresql
             PGPASSWORD=#{db_master['postgresql']['password']['replication_user']} pg_basebackup -v -U replication_user -h #{db_master['ipaddress'].to_s} -D /var/pgsql/pgbasebackup
-            cp -r /var/pgsql/pgbasebackup/* /var/pgsql/data/
-            chown -R postgres:postgres /var/pgsql/data/
+            cp -r /var/pgsql/pgbasebackup/* #{node[:postgresql][:dir]}
+            chown -R postgres:postgres #{node[:postgresql][:dir]}
             svcadm enable postgresql
       EOH
       only_if { db_master['postgresql']['password']['replication_user'] }
