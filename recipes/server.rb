@@ -51,13 +51,13 @@ template "#{node[:postgresql][:dir]}/pg_hba.conf" do
   group "postgres"
   mode 0600
   variables(:standby_ips => node['postgresql']['standby_ips'])
-  notifies :reload, resources(:service => "postgresql")
+  notifies :reload, 'service[postgresql]', :immediately
 end
 
 case node['platform']
 # output from the joyent smartos postgres server install:
 # The default password for the master 'postgres' user is:
-# 
+#
 #   postgres
 when "smartos"
   bash "assign-postgres-password" do
@@ -65,10 +65,9 @@ when "smartos"
     retries 3
     retry_delay 10
     code <<-EOH
-    export PGPASSWORD='postgres' 
-    echo "ALTER ROLE postgres ENCRYPTED PASSWORD '#{node[:postgresql][:password][:postgres]}';" | psql -U postgres
+      echo "ALTER ROLE postgres ENCRYPTED PASSWORD '#{node[:postgresql][:password][:postgres]}';" | psql
     EOH
-    not_if "PGPASSWORD='postgres' echo '\\connect' | PGPASSWORD=#{node['postgresql']['password']['postgres']} psql --username=postgres -h localhost"
+    not_if "echo '\\connect' | PGPASSWORD=#{node['postgresql']['password']['postgres']} psql -U postgres -w -h localhost"
     action :run
   end
 else
