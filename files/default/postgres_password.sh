@@ -13,7 +13,7 @@ if [ -f /root/.pg_service.conf ]; then
   exit 1
 fi
 
-echo "ALTER USER postgres WITH PASSWORD '${PASSWORD}';" | psql -U postgres 2>&1 >> /dev/null
+echo "ALTER USER postgres WITH PASSWORD '${PASSWORD}';" | PGPASSWORD=postgres psql -U postgres 2>&1 >> /dev/null
 
 echo -e "[postgres]\ndbname=postgres\nuser=postgres\npassword=${PASSWORD}" > /root/.pg_service.conf
 

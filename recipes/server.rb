@@ -65,6 +65,7 @@ end
 bash 'set root password for postgresql' do
   user 'root'
   code '/tmp/postgres_password.sh'
+  only_if "svcs -a | grep postgresql | grep online"
   not_if { ::File.exists?('/root/.pg_service.conf') }
 end
 

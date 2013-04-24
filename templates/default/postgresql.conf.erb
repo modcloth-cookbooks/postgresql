@@ -1,4 +1,4 @@
-listen_addresses                     = '<%= node[:postgresql][:listen_addresses] %>'
+listen_addresses                     = '<%= node[:postgresql][:listen_addresses] %>,127.0.0.1'
 port                                 = 5432
 max_connections                      = <%= node[:postgresql][:max_connections] %>
 
