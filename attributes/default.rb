@@ -21,3 +21,8 @@ default[:postgresql][:listen_addresses]                         = `ifconfig -a |
 default[:postgresql][:max_connections]                          = "500"
 default[:postgresql][:shared_buffers]                           = "32MB"
 
+default[:postgresql][:replication_master_enable]                = "no"
+default[:postgresql][:replication_master_hostname]              = "localhost"
+default[:postgresql][:replication_standby_enable]               = "no"
+default[:postgresql][:replication_standby_hostname]             = "localhost"
+

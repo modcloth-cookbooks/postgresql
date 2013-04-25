@@ -14,3 +14,16 @@ lc_numeric                           = 'en_US.UTF-8'
 lc_time                              = 'en_US.UTF-8'
 
 default_text_search_config           = 'pg_catalog.english'
+
+<% if node[:postgresql][:replication_master_enable].eql?("yes") %>
+wal_level                            = hot_standby
+wal_keep_segments                    = 32
+max_wal_senders                      = 2
+archive_mode                         = on
+archive_command                      = 'rsync -ap %p postgres@<%= node[:postgresql][:replication_standby_hostname] %>:/var/pgsql/wals/%f < /dev/null'
+<% end %>
+<% if node[:postgresql][:replication_standby_enable].eql?("yes") %>
+wal_level                            = hot_standby
+hot_standby                          = on
+<% end %>
+

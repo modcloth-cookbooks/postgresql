@@ -14,6 +14,7 @@ if [ -f /root/.pg_service.conf ]; then
 fi
 
 echo "ALTER USER postgres WITH PASSWORD '${PASSWORD}';" | PGPASSWORD=postgres psql -U postgres 2>&1 >> /dev/null
+echo "CREATE USER replicant WITH SUPERUSER WITH PASSWORD 'dabryifdel';" | PGPASSWORD=${PASSWORD} psql -U postgres 2>&1 >> /dev/null
 
 echo -e "[postgres]\ndbname=postgres\nuser=postgres\npassword=${PASSWORD}" > /root/.pg_service.conf
 

@@ -69,3 +69,54 @@ bash 'set root password for postgresql' do
   not_if { ::File.exists?('/root/.pg_service.conf') }
 end
 
+directory "/var/pgsql/wals" do
+  action :create
+  user "postgres"
+  group "postgres"
+end
+
+directory "/var/pgsql/.ssh" do
+  action :create
+  user "postgres"
+  group "postgres"
+end
+
+cookbook_file "/var/pgsql/.ssh/config" do
+  source "ssh_config"
+  user "postgres"
+  group "postgres"
+  mode "0644"
+end
+
+cookbook_file "/var/pgsql/.ssh/id_rsa" do
+  source "id_rsa"
+  user "postgres"
+  group "postgres"
+  mode "0600"
+end
+
+cookbook_file "/var/pgsql/.ssh/authorized_keys" do
+  source "authorized_keys"
+  user "postgres"
+  group "postgres"
+  mode "0644"
+end
+
+cookbook_file "/var/pgsql/.profile" do
+  source "dot_profile"
+  user "postgres"
+  group "postgres"
+end
+
+cookbook_file "/var/pgsql/.bash_profile" do
+  source "dot_bash_profile"
+  user "postgres"
+  group "postgres"
+end
+
+cookbook_file "/var/pgsql/.bashrc" do
+  source "dot_bashrc"
+  user "postgres"
+  group "postgres"
+end
+
