@@ -1,0 +1,28 @@
+Host 10.3.7.*
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+Host 192.168.113.*
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+Host 192.168.112.*
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+Host 192.168.38.*
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+Host 192.168.36.*
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+Host *.demo.modcloth.com
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+Host *.stage.modcloth.com
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+Host *.prod.modcloth.com
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+Host *.modcloth.com
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+
